@@ -2,6 +2,8 @@
   "name": "plathott",
   "version": "1.0.0",
   "description": "A GB Studio platformer game - Desktop Edition",
+  "author": "Plathott Team <plathott@example.com>",
+  "maintainer": "Plathott Team <plathott@example.com>",
   "main": "main.js",
   "homepage": "./",
   "scripts": {
