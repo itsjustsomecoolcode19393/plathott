@@ -24,7 +24,23 @@
 
         .container {
             text-align: center;
-            max-width: 600px;
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .menu-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         h1 {
@@ -85,35 +101,154 @@
             font-size: 0.8em;
             color: #888;
         }
+
+        #emulator {
+            max-width: 100%;
+            border: 3px solid #667eea;
+            border-radius: 5px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .game-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .loading {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🐿️ Plathott</h1>
-        
-        <div class="game-info">
-            <p><strong>A GB Studio Platformer Game</strong></p>
-            <p>Navigate through levels as a speedy chipmunk!</p>
-            <p style="margin-top: 15px; font-size: 0.9em; color: #aaa;">
-                Art & Box Art · Sprites by <a href="https://thinkepic.itch.io/gb-studio-sprites" style="color: #667eea;">Think Epic</a>
-            </p>
+        <!-- Menu Screen -->
+        <div id="menuScreen" class="menu-screen">
+            <h1>🐿️ Plathott</h1>
+            
+            <div class="game-info">
+                <p><strong>A GB Studio Platformer Game</strong></p>
+                <p>Navigate through levels as a speedy chipmunk!</p>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #aaa;">
+                    Art & Box Art · Sprites by <a href="https://thinkepic.itch.io/gb-studio-sprites" style="color: #667eea;">Think Epic</a>
+                </p>
+            </div>
+
+            <button class="btn" onclick="startGame()">🎮 Start Game</button>
+
+            <div class="links">
+                <a href="https://healthyburger.itch.io/plathott" target="_blank">Play Online</a>
+                <a href="https://github.com/itsjustsomecoolcode19393/plathott" target="_blank">GitHub</a>
+            </div>
+
+            <div class="version">Version 1.0.0 - Desktop Edition</div>
         </div>
 
-        <button class="btn" onclick="startGame()">Start Game</button>
-
-        <div class="links">
-            <a href="https://healthyburger.itch.io/plathott" target="_blank">Play Online</a>
-            <a href="https://github.com/itsjustsomecoolcode19393/plathott" target="_blank">GitHub</a>
+        <!-- Game Screen -->
+        <div id="gameScreen" class="game-screen">
+            <h1>🐿️ Plathott</h1>
+            <canvas id="emulator"></canvas>
+            <div class="game-controls">
+                <button class="btn back-btn" onclick="backToMenu()">← Back to Menu</button>
+            </div>
         </div>
-
-        <div class="version">Version 1.0.0 - Desktop Edition</div>
     </div>
 
+    <!-- Include Gbc.js emulator -->
+    <script src="https://unpkg.com/gbc.js@1.0.32/gbc.js"></script>
+    
     <script>
-        function startGame() {
-            alert('Game launcher coming soon! Your GB Studio game will load here.');
-            // Replace this with actual game loading logic
-            // You can embed your GB Studio game build here
+        let emulator = null;
+
+        async function startGame() {
+            document.getElementById('menuScreen').style.display = 'none';
+            
+            const gameScreen = document.getElementById('gameScreen');
+            gameScreen.style.display = 'flex';
+            
+            // Show loading
+            gameScreen.innerHTML = `
+                <h1>🐿️ Plathott</h1>
+                <div class="loading">
+                    <p>Loading game...</p>
+                    <div class="loading-spinner"></div>
+                </div>
+            `;
+
+            try {
+                // Initialize emulator
+                const canvas = document.createElement('canvas');
+                canvas.id = 'emulator';
+                
+                emulator = new GBC({
+                    canvas: canvas,
+                    cpu: {
+                        instruction_cycles: 0
+                    }
+                });
+
+                // Download and load the game ROM
+                const romResponse = await fetch('https://github.com/itsjustsomecoolcode19393/plathott/releases/download/v1/plathott.1.gb');
+                const romBuffer = await romResponse.arrayBuffer();
+                
+                // Load ROM into emulator
+                emulator.load(romBuffer);
+
+                // Update screen
+                gameScreen.innerHTML = `
+                    <h1>🐿️ Plathott</h1>
+                `;
+                gameScreen.appendChild(canvas);
+                gameScreen.innerHTML += `
+                    <div class="game-controls">
+                        <button class="btn back-btn" onclick="backToMenu()">← Back to Menu</button>
+                    </div>
+                `;
+
+                // Start emulation
+                emulator.play();
+
+            } catch (error) {
+                console.error('Error loading game:', error);
+                gameScreen.innerHTML = `
+                    <h1>🐿️ Plathott</h1>
+                    <div class="game-info">
+                        <p>❌ Error loading game</p>
+                        <p style="color: #ff6b6b;">${error.message}</p>
+                    </div>
+                    <button class="btn back-btn" onclick="backToMenu()">← Back to Menu</button>
+                `;
+            }
+        }
+
+        function backToMenu() {
+            if (emulator) {
+                emulator.stop();
+            }
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('menuScreen').style.display = 'flex';
         }
     </script>
 </body>
