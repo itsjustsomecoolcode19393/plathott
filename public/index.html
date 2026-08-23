@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plathott</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .game-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .game-info p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .links {
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .version {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐿️ Plathott</h1>
+        
+        <div class="game-info">
+            <p><strong>A GB Studio Platformer Game</strong></p>
+            <p>Navigate through levels as a speedy chipmunk!</p>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #aaa;">
+                Art & Box Art · Sprites by <a href="https://thinkepic.itch.io/gb-studio-sprites" style="color: #667eea;">Think Epic</a>
+            </p>
+        </div>
+
+        <button class="btn" onclick="startGame()">Start Game</button>
+
+        <div class="links">
+            <a href="https://healthyburger.itch.io/plathott" target="_blank">Play Online</a>
+            <a href="https://github.com/itsjustsomecoolcode19393/plathott" target="_blank">GitHub</a>
+        </div>
+
+        <div class="version">Version 1.0.0 - Desktop Edition</div>
+    </div>
+
+    <script>
+        function startGame() {
+            alert('Game launcher coming soon! Your GB Studio game will load here.');
+            // Replace this with actual game loading logic
+            // You can embed your GB Studio game build here
+        }
+    </script>
+</body>
+</html>
